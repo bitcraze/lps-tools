@@ -8,7 +8,8 @@ setup(name='lpstools',
       author_email='contact@bitcraze.io',
       license='MIT',
       packages=['lpstools', 'dfuse'],
-      install_requires=[
-          'pyqt5',
-      ],
+      install_requires=[],
+      extras_require={
+          'pyqt5': ['pyqt5']
+      },
       zip_safe=False)

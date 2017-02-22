@@ -24,9 +24,11 @@
 """
 This class handle dfu update of the firmware
 """
-import dfuse
 import usb.core
 import usb.util
+
+import dfuse
+
 
 class dfu():
     VID = 0x0483
@@ -44,14 +46,15 @@ class dfu():
         usbdev = usb.core.find(idVendor=self.VID, idProduct=self.PID)
 
         if usbdev is not None:
+
             dfuDev = dfuse.DfuDevice(usbdev)
-            for _,alt in dfuDev.alternates():
+            for _, alt in dfuDev.alternates():
                 if alt.configuration == self.CFG and alt.bInterfaceNumber == self.INTF and alt.bAlternateSetting == self.ALT:
                     dfuDev.set_alternate(alt)
                     status = dfuDev.get_status()
                     if status[1] == dfuse.DfuState.DFU_ERROR:
                         print("Error cleared: %r" % (status,))
-                        dfuDev.clear_status() # Clear left-over errors
+                        dfuDev.clear_status()  # Clear left-over errors
                     return dfuDev
         raise ValueError('No DfuSe compatible device found')
 
@@ -59,42 +62,50 @@ class dfu():
         dfuDev = self.find_device()
         dfufile = dfuse.DfuFile(filepath)
 
-        targets = [t for t in dfufile.targets if t['alternate'] == dfuDev.intf.bAlternateSetting]
+        targets = [t for t in dfufile.targets if t[
+            'alternate'] == dfuDev.intf.bAlternateSetting]
 
         if len(targets) == 0:
             raise ValueError("No file target matches the device")
 
-        print ("Flashing. Please wait this might be long ...")
+        print("Flashing. Please wait this might be long ...")
         for t in targets:
-            print ("Found target %r" % t['name'])
+            print("Found target %r" % t['name'])
             for idx, image in enumerate(t['elements']):
                 print("Flashing image %d at 0x%.8X" % (idx, image['address']))
 
                 print("Erasing ...")
                 callback("Erasing", 0)
                 dfuDev.erase(image['address'])
-                status = dfuDev.wait_while_state(dfuse.DfuState.DFU_DOWNLOAD_BUSY)
+                status = dfuDev.wait_while_state(
+                    dfuse.DfuState.DFU_DOWNLOAD_BUSY)
                 if status[1] != dfuse.DfuState.DFU_DOWNLOAD_IDLE:
-                    raise RuntimeError("An error occured. Device Status: %r" % status)
+                    raise RuntimeError(
+                        "An error occured. Device Status: %r" % status)
 
                 print("Flashing ...")
                 transfer_size = 2048
                 dfuDev.set_address(image['address'])
-                status = dfuDev.wait_while_state(dfuse.DfuState.DFU_DOWNLOAD_BUSY)
+                status = dfuDev.wait_while_state(
+                    dfuse.DfuState.DFU_DOWNLOAD_BUSY)
                 if status[1] != dfuse.DfuState.DFU_DOWNLOAD_IDLE:
-                    raise RuntimeError("An error occured. Device Status: %r" % status)
-                
+                    raise RuntimeError(
+                        "An error occured. Device Status: %r" % status)
+
                 data = image['data']
-                blocks = [data[i:i + transfer_size] for i in range(0, len(data), transfer_size)]
-                print("Transfer size {} and Blocks {}".format(len(data), len(blocks)))
+                blocks = [data[i:i + transfer_size]
+                          for i in range(0, len(data), transfer_size)]
+                print("Transfer size {} and Blocks {}".format(
+                    len(data), len(blocks)))
                 for blocknum, block in enumerate(blocks):
                     print("Flashing block %r" % blocknum)
-                    callback("Flashing", blocknum/len(blocks))
+                    callback("Flashing", blocknum / len(blocks))
                     dfuDev.write(blocknum, block)
-                    status = dfuDev.wait_while_state(dfuse.DfuState.DFU_DOWNLOAD_BUSY)
+                    status = dfuDev.wait_while_state(
+                        dfuse.DfuState.DFU_DOWNLOAD_BUSY)
                     if status[1] != dfuse.DfuState.DFU_DOWNLOAD_IDLE:
-                        raise RuntimeError("An error occured. Device Status: {}".format(status))
+                        raise RuntimeError(
+                            "An error occured. Device Status: {}".format(status))
 
                 callback("Flashing", 1.0)
                 print("Done")
-

@@ -2,7 +2,8 @@
 import subprocess
 
 try:
-    subprocess.check_call(['pre-commit', 'run', '--all-files'])
+    # Note: the list of files that are checkes is duplicated in tox.ini, please keep in sync
+    subprocess.check_call(['pre-commit', 'run', '--files', 'lpstools/*', 'test/*', 'tools/*', 'setup.py'])
     print('verify pass')
 except subprocess.CalledProcessError as e:
     print('Error: verify fail')

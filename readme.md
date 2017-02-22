@@ -12,21 +12,50 @@ distribution of Python 3.4 or later should work.
 
 To install for development (will use the files in the repos folder):
 ```
-pip install -e .
+pip3 install -e .[pyqt5]
 ```
 
-To install in the system:
+On linux, if you have installed pyqt5 using some other package manager
 ```
-pip install .
+pip3 install -e .
 ```
 
 To run the GUI:
 ```
-python3 -m lpstools.gui
+python3 -m lpstools
 ```
+
+## The tooolbelt
+
+If you do not want to install python tools natively you can use the toolbelt
+instead. See the [github repository.](https://github.com/bitcraze/toolbelt)
 
 ## Coding style
 
 We use tools to automatically check the code style on the build server 
 (travis). To see what we check for take a look in the .pre-commit-config.yaml 
 file, it contains a list of all plugins that are running.
+
+To run all checks:
+
+* with native tools 
+```
+tox
+```
+
+* with the toolbelt
+```
+tb verify
+```
+
+## Unit testing
+
+* with native tools 
+```
+tox
+```
+
+* with the toolbelt
+```
+tb test
+```
