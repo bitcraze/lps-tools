@@ -6,6 +6,8 @@ from PyQt5 import uic
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap
 
+from . import dfu
+
 
 class LpsToolsGui(QtWidgets.QMainWindow):
 
@@ -37,6 +39,12 @@ class LpsToolsGui(QtWidgets.QMainWindow):
     def _update_clicked(self):
         print("TODO: Flashing %s" % self.dfufile_line.text())
         self.dfu_progress.setValue(42)
+
+        def callback(str, progress):
+            self.dfu_progress.setValue(progress * 100)
+
+        flasher = dfu.dfu()
+        flasher.flash(self.dfufile_line.text(), callback)
 
 
 def main():
