@@ -1,4 +1,4 @@
-# Loco Positioning System Tools
+# Loco Positioning System Tools [![Build Status](https://api.travis-ci.org/bitcraze/lps-tools.svg?branch=master)](https://api.travis-ci.org/bitcraze/lps-tools.svg?branch=master)
 
 Tools to configure the Loco Positioning System
 
