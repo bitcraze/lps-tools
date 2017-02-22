@@ -19,7 +19,24 @@ class LpsToolsGui(QtWidgets.QMainWindow):
         h = self.infoLabel.height()
         self.infoLabel.setPixmap(pixmap.scaled(w, h, Qt.KeepAspectRatio))
 
+        # Connect buttons
+        self.browseButton.clicked.connect(self._browse_clicked)
+        self.updateButton.clicked.connect(self._update_clicked)
+
         self.show()
+
+    def _browse_clicked(self):
+        dialog_type = "QFileDialog.getOpenFileName()"
+        dialog_filter = "DFU Files (*.dfu);;All Files (*)"
+        filename, _ = QtWidgets.QFileDialog.getOpenFileName(self,
+                                                            dialog_type,
+                                                            "",
+                                                            dialog_filter)
+        self.dfufile_line.setText(filename)
+
+    def _update_clicked(self):
+        print("TODO: Flashing %s" % self.dfufile_line.text())
+        self.dfu_progress.setValue(42)
 
 
 def main():

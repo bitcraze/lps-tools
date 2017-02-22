@@ -47,10 +47,10 @@
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout">
            <item>
-            <widget class="QLineEdit" name="lineEdit"/>
+            <widget class="QLineEdit" name="dfufile_line"/>
            </item>
            <item>
-            <widget class="QPushButton" name="pushButton">
+            <widget class="QPushButton" name="browseButton">
              <property name="text">
               <string>Browse</string>
              </property>
@@ -61,14 +61,14 @@
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_2">
            <item>
-            <widget class="QProgressBar" name="progressBar">
+            <widget class="QProgressBar" name="dfu_progress">
              <property name="value">
               <number>24</number>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="pushButton_2">
+            <widget class="QPushButton" name="updateButton">
              <property name="text">
               <string>Update</string>
              </property>
