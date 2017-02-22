@@ -24,3 +24,9 @@ To run the GUI:
 ```
 python3 -m lpstools.gui
 ```
+
+## Coding style
+
+We use tools to automatically check the code style on the build server 
+(travis). To see what we check for take a look in the .pre-commit-config.yaml 
+file, it contains a list of all plugins that are running.

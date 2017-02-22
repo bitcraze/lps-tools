@@ -1,9 +1,12 @@
-from PyQt5 import uic, QtWidgets
-import sys
 import os
+import sys
+
+from PyQt5 import QtWidgets
+from PyQt5 import uic
 
 
 class LpsToolsGui(QtWidgets.QWidget):
+
     def __init__(self, uipath):
         super(LpsToolsGui, self).__init__()
         uic.loadUi(uipath + os.path.sep + 'gui.ui', self)
