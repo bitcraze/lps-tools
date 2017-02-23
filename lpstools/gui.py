@@ -4,8 +4,8 @@ import sys
 from PyQt5 import QtCore
 from PyQt5 import QtWidgets
 from PyQt5 import uic
-from PyQt5.QtCore import Qt
 from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QMessageBox
 
@@ -151,6 +151,7 @@ class LpsToolsGui(QtWidgets.QMainWindow):
 
 
 class _DfuThread(QtCore.QThread):
+
     def __init__(self, window, dfu, file, callback):
         QtCore.QThread.__init__(self)
         self._window = window
