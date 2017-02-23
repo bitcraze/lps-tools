@@ -37,9 +37,6 @@ class dfu():
     INTF = 0
     ALT = 0
 
-    def __init__(self):
-        dfuDev = None
-
     def find_device(self):
         """
         :Try to find the DFU device and return it"""
@@ -49,7 +46,9 @@ class dfu():
 
             dfuDev = dfuse.DfuDevice(usbdev)
             for _, alt in dfuDev.alternates():
-                if alt.configuration == self.CFG and alt.bInterfaceNumber == self.INTF and alt.bAlternateSetting == self.ALT:
+                if alt.configuration == self.CFG and \
+                        alt.bInterfaceNumber == self.INTF and \
+                        alt.bAlternateSetting == self.ALT:
                     dfuDev.set_alternate(alt)
                     status = dfuDev.get_status()
                     if status[1] == dfuse.DfuState.DFU_ERROR:
@@ -105,7 +104,8 @@ class dfu():
                         dfuse.DfuState.DFU_DOWNLOAD_BUSY)
                     if status[1] != dfuse.DfuState.DFU_DOWNLOAD_IDLE:
                         raise RuntimeError(
-                            "An error occured. Device Status: {}".format(status))
+                            "An error occured. Device Status: {}".
+                            format(status))
 
                 callback("Flashing", 1.0)
                 print("Done")

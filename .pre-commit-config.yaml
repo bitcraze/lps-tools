@@ -2,19 +2,33 @@
     sha: 616c1ebd1898c91de9a0548866a59cbd9f4547f6
     hooks:
     -   id: autopep8-wrapper
+        exclude: dfuse/.*
     -   id: check-added-large-files
+        exclude: dfuse/.*
     -   id: check-case-conflict
+        exclude: dfuse/.*
     -   id: check-docstring-first
+        exclude: dfuse/.*
     -   id: check-json
+        exclude: dfuse/.*
     -   id: check-merge-conflict
+        exclude: dfuse/.*
     -   id: check-xml
+        exclude: dfuse/.*
     -   id: check-yaml
+        exclude: dfuse/.*
     -   id: debug-statements
+        exclude: dfuse/.*
     -   id: detect-private-key
+        exclude: dfuse/.*
     -   id: end-of-file-fixer
+        exclude: dfuse/.*
     -   id: flake8
+        exclude: dfuse/.*
     -   id: requirements-txt-fixer
+        exclude: dfuse/.*
 -   repo: git://github.com/asottile/reorder_python_imports
     sha: f3dfe379d2ea341c6cf54d926d4585b35dea9251
     hooks:
     -   id: reorder-python-imports
+        exclude: dfuse/.*
