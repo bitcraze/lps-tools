@@ -97,6 +97,6 @@ class dfu():
                         raise RuntimeError(
                             "An error occured. Device Status: {}".
                             format(status))
-                
+
                 dfuDev.leave()
                 callback("Flashing", 1.0)
