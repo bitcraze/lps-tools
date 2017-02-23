@@ -31,6 +31,7 @@ import dfuse
 
 
 class dfu():
+    TRANSFER_SIZE = 2048
     VID = 0x0483
     PID = 0xdf11
     CFG = 0
@@ -52,7 +53,6 @@ class dfu():
                     dfuDev.set_alternate(alt)
                     status = dfuDev.get_status()
                     if status[1] == dfuse.DfuState.DFU_ERROR:
-                        print("Error cleared: %r" % (status,))
                         dfuDev.clear_status()  # Clear left-over errors
                     return dfuDev
         raise ValueError('No DfuSe compatible device found')
@@ -67,13 +67,9 @@ class dfu():
         if len(targets) == 0:
             raise ValueError("No file target matches the device")
 
-        print("Flashing. Please wait this might be long ...")
         for t in targets:
-            print("Found target %r" % t['name'])
             for idx, image in enumerate(t['elements']):
-                print("Flashing image %d at 0x%.8X" % (idx, image['address']))
 
-                print("Erasing ...")
                 callback("Erasing", 0)
                 dfuDev.erase(image['address'])
                 status = dfuDev.wait_while_state(
@@ -82,8 +78,6 @@ class dfu():
                     raise RuntimeError(
                         "An error occured. Device Status: %r" % status)
 
-                print("Flashing ...")
-                transfer_size = 2048
                 dfuDev.set_address(image['address'])
                 status = dfuDev.wait_while_state(
                     dfuse.DfuState.DFU_DOWNLOAD_BUSY)
@@ -92,12 +86,9 @@ class dfu():
                         "An error occured. Device Status: %r" % status)
 
                 data = image['data']
-                blocks = [data[i:i + transfer_size]
-                          for i in range(0, len(data), transfer_size)]
-                print("Transfer size {} and Blocks {}".format(
-                    len(data), len(blocks)))
+                blocks = [data[i:i + self.TRANSFER_SIZE]
+                          for i in range(0, len(data), self.TRANSFER_SIZE)]
                 for blocknum, block in enumerate(blocks):
-                    print("Flashing block %r" % blocknum)
                     callback("Flashing", blocknum / len(blocks))
                     dfuDev.write(blocknum, block)
                     status = dfuDev.wait_while_state(
@@ -106,6 +97,6 @@ class dfu():
                         raise RuntimeError(
                             "An error occured. Device Status: {}".
                             format(status))
-
+                
+                dfuDev.leave()
                 callback("Flashing", 1.0)
-                print("Done")
