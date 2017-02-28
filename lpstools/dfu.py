@@ -90,7 +90,7 @@ class dfu():
                           for i in range(0, len(data), self.TRANSFER_SIZE)]
                 for blocknum, block in enumerate(blocks):
                     callback("Flashing", blocknum / len(blocks))
-                    dfuDev.write(blocknum, block)
+                    dfuDev.write(block)
                     status = dfuDev.wait_while_state(
                         dfuse.DfuState.DFU_DOWNLOAD_BUSY)
                     if status[1] != dfuse.DfuState.DFU_DOWNLOAD_IDLE:
