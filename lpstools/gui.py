@@ -62,8 +62,6 @@ class LpsToolsGui(QtWidgets.QMainWindow):
         self.state = STATE_DFU
 
     def _update_clicked(self):
-        print("TODO: Flashing %s" % self.dfufile_line.text())
-
         def callback(str, progress):
             self.dfu_progress.setValue(progress * 100)
 
