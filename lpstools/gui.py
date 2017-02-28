@@ -106,14 +106,18 @@ class LpsToolsGui(QtWidgets.QMainWindow):
             self._display_help('help_3.png')
             self.updateButton.setEnabled(True)
             self.dfu_progress.setEnabled(False)
+            self.dfu_progress.setValue(0)
+            self.dfu_progress.setFormat("%p%")
         elif self._state == STATE_DFU_FLASHING:
             self._display_help('help_3.png')
             self.updateButton.setEnabled(False)
             self.dfu_progress.setEnabled(True)
+            self.dfu_progress.setFormat("%p%")
         elif self._state == STATE_DFU_DONE:
             self._display_help('help_4.png')
             self.updateButton.setEnabled(True)
             self.dfu_progress.setEnabled(False)
+            self.dfu_progress.setFormat("Success!")
 
     # Timer functions
 
