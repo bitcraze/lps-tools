@@ -19,7 +19,7 @@ STATE_DFU_DONE = "dfu done"
 
 
 class LpsToolsGui(QtWidgets.QMainWindow):
-    error = pyqtSignal('QString')
+    programming_error = pyqtSignal('QString')
     programming_done = pyqtSignal()
 
     def __init__(self, uipath):
@@ -43,7 +43,7 @@ class LpsToolsGui(QtWidgets.QMainWindow):
         self._device_detector_timer.timeout.connect(self._dfu_present)
         self._device_detector_timer.start(100)
 
-        self.error.connect(self._show_error)
+        self.programming_error.connect(self._show_error)
         self.programming_done.connect(self._programming_done)
 
         self.show()
@@ -162,11 +162,11 @@ class _DfuThread(QtCore.QThread):
             self._dfu.flash(self._file, self._callback)
             self._window.programming_done.emit()
         except dfu.usb.USBError as e:
-            self._window.error.emit("USB Error, node disconnected? (%s)" %
-                                    str(e))
+            self._window.programming_error.emit("USB Error, node" +
+                                                " disconnected? (%s)" % str(e))
         except Exception as e:
-            self._window.error.emit("Error while programming: " +
-                                    str(e))
+            self._window.programming_error.emit("Error while programming: " +
+                                                str(e))
 
 
 def main():
