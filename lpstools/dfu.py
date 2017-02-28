@@ -24,6 +24,8 @@
 """
 This class handle dfu update of the firmware
 """
+import math
+
 import usb.core
 import usb.util
 
@@ -57,6 +59,13 @@ class dfu():
                     return dfuDev
         raise ValueError('No DfuSe compatible device found')
 
+    def wait_for_device_ready(self, dfuDev):
+        status = dfuDev.wait_while_state(
+            dfuse.DfuState.DFU_DOWNLOAD_BUSY)
+        if status[1] != dfuse.DfuState.DFU_DOWNLOAD_IDLE:
+            raise RuntimeError(
+                "An error occured. Device Status: {}".format(status))
+
     def flash(self, filepath, callback):
         dfuDev = self.find_device()
         dfufile = dfuse.DfuFile(filepath)
@@ -67,36 +76,37 @@ class dfu():
         if len(targets) == 0:
             raise ValueError("No file target matches the device")
 
+        total_transfer_blocks = 0
+        blocks_transfered = 0
+        for t in targets:
+            for idx, image in enumerate(t['elements']):
+                total_transfer_blocks += math.ceil(
+                    len(image['data']) / self.TRANSFER_SIZE)
+
         for t in targets:
             for idx, image in enumerate(t['elements']):
 
-                callback("Erasing", 0)
-                dfuDev.erase(image['address'])
-                status = dfuDev.wait_while_state(
-                    dfuse.DfuState.DFU_DOWNLOAD_BUSY)
-                if status[1] != dfuse.DfuState.DFU_DOWNLOAD_IDLE:
-                    raise RuntimeError(
-                        "An error occured. Device Status: %r" % status)
-
-                dfuDev.set_address(image['address'])
-                status = dfuDev.wait_while_state(
-                    dfuse.DfuState.DFU_DOWNLOAD_BUSY)
-                if status[1] != dfuse.DfuState.DFU_DOWNLOAD_IDLE:
-                    raise RuntimeError(
-                        "An error occured. Device Status: %r" % status)
+                callback("Flashing", 0)
 
                 data = image['data']
+                flash_addr = image['address']
                 blocks = [data[i:i + self.TRANSFER_SIZE]
                           for i in range(0, len(data), self.TRANSFER_SIZE)]
+
                 for blocknum, block in enumerate(blocks):
-                    callback("Flashing", blocknum / len(blocks))
-                    dfuDev.write(block)
-                    status = dfuDev.wait_while_state(
-                        dfuse.DfuState.DFU_DOWNLOAD_BUSY)
-                    if status[1] != dfuse.DfuState.DFU_DOWNLOAD_IDLE:
-                        raise RuntimeError(
-                            "An error occured. Device Status: {}".
-                            format(status))
+                    block_addr = flash_addr + blocknum * self.TRANSFER_SIZE
+                    dfuDev.erase(block_addr)
+                    self.wait_for_device_ready(dfuDev)
+
+                    dfuDev.set_address(flash_addr)
+                    self.wait_for_device_ready(dfuDev)
+
+                    dfuDev.write(blocknum, block)
+                    self.wait_for_device_ready(dfuDev)
+
+                    blocks_transfered += 1
+                    callback("Flashing", blocks_transfered /
+                             total_transfer_blocks)
 
                 dfuDev.leave()
                 callback("Flashing", 1.0)

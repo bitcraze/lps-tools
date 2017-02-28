@@ -16,16 +16,6 @@ DFU_ABORT     = 0x06
 def address_to_4bytes(a):
     return [ a % 256, (a >> 8)%256, (a >> 16)%256, (a >> 24)%256 ]
 
-class DfuContext:
-    def __init__(self):
-        self._blockCnt = 0
-        
-    def next_block(self):
-        result = self._blockCnt
-        self._blockCnt += 1
-        return result
-            
-
 class DfuDevice:
     def __init__(self, device):
         self.dev = device
@@ -33,8 +23,7 @@ class DfuDevice:
         self.intf = None
         #self.dev.reset()
         self.cfg.set()
-        self._dfu_context = DfuContext() 
-        
+
     def alternates(self):
         return [(self.get_string(intf.iInterface), intf) for intf in self.cfg]
 
@@ -52,11 +41,11 @@ class DfuDevice:
     def detach(self, timeout):
         return self.control_msg(DFU_REQUEST_SEND, DFU_DETACH, timeout, None)
     
-    def dnload(self, data):
-        return self.control_msg(DFU_REQUEST_SEND, DFU_DNLOAD, self._dfu_context.next_block(), data)
+    def dnload(self, blockNum, data):
+        return self.control_msg(DFU_REQUEST_SEND, DFU_DNLOAD, blockNum, data)
     
-    def upload(self, size):
-        return self.control_msg(DFU_REQUEST_RECEIVE, DFU_UPLOAD, self._dfu_context.next_block(), size)
+    def upload(self, blockNum, size):
+        return self.control_msg(DFU_REQUEST_RECEIVE, DFU_UPLOAD, blockNum, size)
 
     def get_status(self):
         status = self.control_msg(DFU_REQUEST_RECEIVE, DFU_GETSTATUS, 0, 6)
@@ -70,16 +59,16 @@ class DfuDevice:
         return self.control_msg(DFU_REQUEST_RECEIVE, DFU_GETSTATE, 0, 1)[0]
 
     def set_address(self, ap):
-        return self.dnload([0x21] + address_to_4bytes(ap))
+        return self.dnload(0x0, [0x21] + address_to_4bytes(ap))
 
-    def write(self, data):
-        return self.dnload(data)
+    def write(self, block, data):
+        return self.dnload(block + 2, data)
     
     def erase(self, pa):
-        return self.dnload([0x41] + address_to_4bytes(pa))
+        return self.dnload(0x0, [0x41] + address_to_4bytes(pa))
 
     def leave(self):
-        return self.dnload([]) # Just send an empty data.
+        return self.dnload(0x0, []) # Just send an empty data.
 
     def get_string(self, index):
         return ""
