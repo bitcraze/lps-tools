@@ -14,7 +14,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>LPS configuration tool</string>
   </property>
   <property name="autoFillBackground">
    <bool>true</bool>
