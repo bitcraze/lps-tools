@@ -1,4 +1,5 @@
 import os
+import platform
 import sys
 
 from PyQt5 import QtCore
@@ -28,6 +29,7 @@ class LpsToolsGui(QtWidgets.QMainWindow):
         uic.loadUi(uipath + 'gui.ui', self)
 
         self.dfu_progress.setValue(0)
+        self._style_for_platform()
 
         # Connect buttons
         self.browseButton.clicked.connect(self._browse_clicked)
@@ -49,6 +51,20 @@ class LpsToolsGui(QtWidgets.QMainWindow):
         self.programming_progress.connect(self._programming_progress)
 
         self.show()
+
+    # Styling
+
+    def _style_for_platform(self):
+        if platform.system() == 'Darwin':
+            (Version, _, machine) = platform.mac_ver()
+            tVersion = tuple(map(int, (Version.split("."))))
+            yosemite = (10, 10, 0)
+
+            if tVersion >= yosemite:
+                self.setStyleSheet(
+                    'QProgressBar {border: 0px; '
+                    'background-color: transparent; '
+                    'text-align: center;}')
 
     # UI Events handling
 
@@ -99,26 +115,21 @@ class LpsToolsGui(QtWidgets.QMainWindow):
         if self._state == STATE_NO_FIRMWARE:
             self._display_help('help_1.png')
             self.updateButton.setEnabled(False)
-            self.dfu_progress.setEnabled(False)
         elif self._state == STATE_DFU and not self._dfu_connected:
             self._display_help('help_2.png')
             self.updateButton.setEnabled(False)
-            self.dfu_progress.setEnabled(False)
         elif self._state == STATE_DFU and self._dfu_connected:
             self._display_help('help_3.png')
             self.updateButton.setEnabled(True)
-            self.dfu_progress.setEnabled(False)
             self.dfu_progress.setValue(0)
             self.dfu_progress.setFormat("%p%")
         elif self._state == STATE_DFU_FLASHING:
             self._display_help('help_3.png')
             self.updateButton.setEnabled(False)
-            self.dfu_progress.setEnabled(True)
             self.dfu_progress.setFormat("%p%")
         elif self._state == STATE_DFU_DONE:
             self._display_help('help_4.png')
             self.updateButton.setEnabled(True)
-            self.dfu_progress.setEnabled(False)
             self.dfu_progress.setFormat("Success!")
 
     # Timer functions
