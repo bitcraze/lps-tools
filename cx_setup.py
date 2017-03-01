@@ -1,8 +1,8 @@
-import sys
-import shutil
 import glob
-from os import path
 import os
+import shutil
+import sys
+from os import path
 
 from cx_Freeze import Executable
 from cx_Freeze import setup
