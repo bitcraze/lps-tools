@@ -21,6 +21,7 @@ STATE_DFU_DONE = "dfu done"
 class LpsToolsGui(QtWidgets.QMainWindow):
     programming_error = pyqtSignal('QString')
     programming_done = pyqtSignal()
+    programming_progress = pyqtSignal('QString', float)
 
     def __init__(self, uipath):
         super(LpsToolsGui, self).__init__()
@@ -45,6 +46,7 @@ class LpsToolsGui(QtWidgets.QMainWindow):
 
         self.programming_error.connect(self._show_error)
         self.programming_done.connect(self._programming_done)
+        self.programming_progress.connect(self._programming_progress)
 
         self.show()
 
@@ -62,13 +64,10 @@ class LpsToolsGui(QtWidgets.QMainWindow):
         self.state = STATE_DFU
 
     def _update_clicked(self):
-        def callback(str, progress):
-            self.dfu_progress.setValue(progress * 100)
-
         # Flashing in a thread to keep the UI alive
         self._flasher_thread = _DfuThread(self, self._dfu,
                                           self.dfufile_line.text(),
-                                          callback)
+                                          self.programming_progress.emit)
         self._flasher_thread.start()
 
         self.state = STATE_DFU_FLASHING
@@ -84,6 +83,9 @@ class LpsToolsGui(QtWidgets.QMainWindow):
 
     def _programming_done(self):
         self.state = STATE_DFU_DONE
+
+    def _programming_progress(self, str, progress):
+        self.dfu_progress.setValue(progress * 100)
 
     # UI State handling
 
