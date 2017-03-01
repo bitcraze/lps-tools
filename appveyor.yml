@@ -1,0 +1,19 @@
+version: 1.0.{build}
+init:
+- cmd: SET PATH=c:\python36;c:\python36\Scripts;%PATH%
+install:
+- cmd: >-
+    pip install -e .[pyqt5]
+
+    pip install cx_freeze
+cache: '%LOCALAPPDATA%\pip\Cache'
+build_script:
+- cmd: >-
+    pip install -e .[pyqt5]
+
+    pip install cx_freeze
+
+    python cx_setup.py build
+artifacts:
+- path: build\exe.win32-3.6\
+  name: lpstools_win32_{build}
