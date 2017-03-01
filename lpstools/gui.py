@@ -24,7 +24,7 @@ class LpsToolsGui(QtWidgets.QMainWindow):
 
     def __init__(self, uipath):
         super(LpsToolsGui, self).__init__()
-        uic.loadUi(uipath + os.path.sep + 'gui.ui', self)
+        uic.loadUi(uipath + 'gui.ui', self)
 
         self.dfu_progress.setValue(0)
 
@@ -179,8 +179,7 @@ def main():
         uipath = os.path.dirname(sys.executable)
     else:
         # unfrozen
-        filepath = os.path.dirname(os.path.realpath(__file__))
-        uipath = os.path.sep.join(filepath.split(os.path.sep)[:-1])
+        uipath = os.path.dirname(os.path.realpath(__file__))
     uipath += os.path.sep + "assets" + os.path.sep
 
     app = QtWidgets.QApplication(sys.argv)
