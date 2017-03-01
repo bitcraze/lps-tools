@@ -9,5 +9,5 @@ setup_options = {
     "author": 'Bitcraze',
     "author_email": 'contact@bitcraze.io',
     "license": 'MIT',
-    "install_requires": ["pyusb"],
+    "install_requires": ["pyusb", "pyserial"],
 }
