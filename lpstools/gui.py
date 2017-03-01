@@ -18,6 +18,12 @@ STATE_DFU = "dfu"
 STATE_DFU_FLASHING = "dfu flashing"
 STATE_DFU_DONE = "dfu done"
 
+MODES = {
+    0: "Anchor",
+    1: "Tag",
+    2: "Sniffer",
+}
+
 
 class LpsToolsGui(QtWidgets.QMainWindow):
     programming_error = pyqtSignal('QString')
@@ -34,6 +40,7 @@ class LpsToolsGui(QtWidgets.QMainWindow):
         # Connect buttons
         self.browseButton.clicked.connect(self._browse_clicked)
         self.updateButton.clicked.connect(self._update_clicked)
+        self.configureButton.clicked.connect(self._configure_clicked)
 
         self._uipath = uipath
 
@@ -87,6 +94,10 @@ class LpsToolsGui(QtWidgets.QMainWindow):
         self._flasher_thread.start()
 
         self.state = STATE_DFU_FLASHING
+
+    def _configure_clicked(self):
+        print("Configure id {} mode {}".format(self.configure_id_line.value(),
+                                               MODES[self.configure_mode_combo.currentIndex()]))
 
     def _show_error(self, error):
         msgbox = QMessageBox(self)
