@@ -96,8 +96,10 @@ class LpsToolsGui(QtWidgets.QMainWindow):
         self.state = STATE_DFU_FLASHING
 
     def _configure_clicked(self):
-        print("Configure id {} mode {}".format(self.configure_id_line.value(),
-                                               MODES[self.configure_mode_combo.currentIndex()]))
+        print(
+            "Configure id {} mode {}".format(
+                self.configure_id_line.value(),
+                MODES[self.configure_mode_combo.currentIndex()]))
 
     def _show_error(self, error):
         msgbox = QMessageBox(self)
