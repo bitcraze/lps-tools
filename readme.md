@@ -25,6 +25,20 @@ To run the GUI:
 python3 -m lpstools
 ```
 
+## Building for Windows
+
+It is possible to build a windows executable of the tool. This allows to
+distribute the LPS tool without requiring a python installation.
+
+To build the windows executable, you should first have the LPS tool working
+on Windows. The you can build:
+```
+pip install cx_freeze
+python cx_setup.py build
+```
+
+The final result is in the folder ```build\exe.win32-3.6```.
+
 ## The tooolbelt
 
 If you do not want to install python tools natively you can use the toolbelt
@@ -32,15 +46,15 @@ instead. See the [github repository.](https://github.com/bitcraze/toolbelt)
 
 ## Coding style
 
-We use tools to automatically check the code style on the build server 
-(travis). To see what we check for take a look in the .pre-commit-config.yaml 
+We use tools to automatically check the code style on the build server
+(travis). To see what we check for take a look in the .pre-commit-config.yaml
 file, it contains a list of all plugins that are running.
 
 To run all checks:
 
-* with native tools 
+* with native tools
 ```
-tox
+tox  # You can also run 'pre-commit run --all-files' to check without virtual environment
 ```
 
 * with the toolbelt
@@ -50,7 +64,7 @@ tb verify
 
 ## Unit testing
 
-* with native tools 
+* with native tools
 ```
 tox
 ```
