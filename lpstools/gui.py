@@ -9,7 +9,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QMessageBox
 
-from . import dfu
+from lpstools import dfu
 
 
 STATE_NO_FIRMWARE = "no firmware"
@@ -174,8 +174,13 @@ class _DfuThread(QtCore.QThread):
 
 
 def main():
-    filepath = os.path.realpath(__file__)
-    uipath = os.path.sep.join(filepath.split(os.path.sep)[:-1])
+    if getattr(sys, 'frozen', False):
+        # frozen
+        uipath = os.path.dirname(sys.executable)
+    else:
+        # unfrozen
+        filepath = os.path.dirname(os.path.realpath(__file__))
+        uipath = os.path.sep.join(filepath.split(os.path.sep)[:-1])
     uipath += os.path.sep + "assets" + os.path.sep
 
     app = QtWidgets.QApplication(sys.argv)

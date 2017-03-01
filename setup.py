@@ -1,14 +1,7 @@
 from setuptools import setup
+from setup_common import setup_options
 
-setup(name='lpstools',
-      version='0.1',
-      description='Loco positioning tools',
-      url='http://github.com/bitcraze/lpstools',
-      author='Bitcraze',
-      author_email='contact@bitcraze.io',
-      license='MIT',
-      packages=['lpstools', 'dfuse'],
-      install_requires=[],
+setup(**setup_options,
       extras_require={
           'pyqt5': ['pyqt5']
       },
