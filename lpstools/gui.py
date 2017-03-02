@@ -20,9 +20,9 @@ STATE_DFU_FLASHING = "dfu flashing"
 STATE_DFU_DONE = "dfu done"
 
 MODES = {
-    0: "Anchor",
-    1: "Tag",
-    2: "Sniffer",
+    0: nodeConfigurator.MODE_ANCOR,
+    1: nodeConfigurator.MODE_TAG,
+    2: nodeConfigurator.MODE_SNIFFER,
 }
 
 
@@ -103,12 +103,10 @@ class LpsToolsGui(QtWidgets.QMainWindow):
         self.state = STATE_DFU_FLASHING
 
     def _configure_clicked(self):
-        print(
-            "Configure id {} mode {}".format(
-                self.configure_id_line.value(),
-                MODES[self.configure_mode_combo.currentIndex()]))
         self._node_configurator.set_id(self._node_device,
                                        self.configure_id_line.value())
+        newmode = MODES[self.configure_mode_combo.currentIndex()]
+        self._node_configurator.set_mode(self._node_device, newmode)
 
     def _show_error(self, error):
         msgbox = QMessageBox(self)

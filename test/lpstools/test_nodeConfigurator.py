@@ -22,10 +22,10 @@
 #  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #  MA  02110-1301, USA.
 import unittest
-
-import serial
 from unittest.mock import MagicMock
 from unittest.mock import patch
+
+import serial
 from serial.tools.list_ports_common import ListPortInfo
 
 from lpstools import nodeConfigurator
@@ -91,7 +91,7 @@ class TestNodeConfigurator(unittest.TestCase):
         ctor_mock.side_effect = lambda x: {device: serial_mock}[x]
 
         # Test
-        self.sut.set_mode(device, self.sut.MODE_ANCOR)
+        self.sut.set_mode(device, nodeConfigurator.MODE_ANCOR)
 
         # Assert
         serial_mock.write.assert_called_once_with(b'a')
@@ -106,10 +106,10 @@ class TestNodeConfigurator(unittest.TestCase):
 
         # Test & assert
         self.assertRaises(KeyError, lambda: self.sut.set_mode(device, 666))
-        
+
         # Assert
         serial_mock.close.assert_called_once()
-        
+
     def _mock_port_info(self, vid, pid, device):
         port_mock = MagicMock(spec=ListPortInfo, auto_spec=True)
 
