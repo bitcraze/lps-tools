@@ -29,6 +29,15 @@ class NodeConfigurator:
     VID = 0x0483
     PID = 0x5740
 
+    MODE_ANCOR   = 0
+    MODE_TAG     = 1
+    MODE_SNIFFER = 2
+    modes = {
+        MODE_ANCOR:  'a', 
+        MODE_TAG:    't',
+        MODE_SNIFFER:'s'
+    }
+    
     def find_node(self):
         ports = comports()
 
@@ -40,3 +49,9 @@ class NodeConfigurator:
         ser = serial.Serial(device)
         ser.write(str(id).encode('utf-8'))
         ser.close()
+
+    def set_mode(self, device, mode):
+        ser = serial.Serial(device)
+        ser.write(self.modes[mode].encode('utf-8'))
+        ser.close()
+        

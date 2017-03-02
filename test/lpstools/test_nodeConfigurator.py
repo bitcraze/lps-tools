@@ -24,8 +24,8 @@
 import unittest
 
 import serial
-from mock import MagicMock
-from mock import patch
+from unittest.mock import MagicMock
+from unittest.mock import patch
 from serial.tools.list_ports_common import ListPortInfo
 
 from lpstools import nodeConfigurator
@@ -83,6 +83,33 @@ class TestNodeConfigurator(unittest.TestCase):
         serial_mock.write.assert_called_once_with(b'3')
         serial_mock.close.assert_called_once()
 
+    @patch.object(serial, 'Serial', autospec=True)
+    def test_that_data_is_written_when_mode_is_set(self, ctor_mock):
+        # Fixture
+        device = '/dev/the_device'
+        serial_mock = MagicMock(spec=serial.Serial, autospec=True)
+        ctor_mock.side_effect = lambda x: {device: serial_mock}[x]
+
+        # Test
+        self.sut.set_mode(device, self.sut.MODE_ANCOR)
+
+        # Assert
+        serial_mock.write.assert_called_once_with(b'a')
+        serial_mock.close.assert_called_once()
+
+    @patch.object(serial, 'Serial', autospec=True)
+    def test_that_exception_is_raised_when_mode_is_wrong(self, ctor_mock):
+        # Fixture
+        device = '/dev/the_device'
+        serial_mock = MagicMock(spec=serial.Serial, autospec=True)
+        ctor_mock.side_effect = lambda x: {device: serial_mock}[x]
+
+        # Test & assert
+        self.assertRaises(KeyError, lambda: self.sut.set_mode(device, 666))
+        
+        # Assert
+        serial_mock.close.assert_called_once()
+        
     def _mock_port_info(self, vid, pid, device):
         port_mock = MagicMock(spec=ListPortInfo, auto_spec=True)
 
