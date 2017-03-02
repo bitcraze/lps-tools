@@ -11,6 +11,7 @@ from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QMessageBox
 
 from lpstools import dfu
+from lpstools import nodeConfigurator
 
 
 STATE_NO_FIRMWARE = "no firmware"
@@ -45,9 +46,10 @@ class LpsToolsGui(QtWidgets.QMainWindow):
         self._uipath = uipath
 
         self._dfu = dfu.dfu()
+        self._node_configurator = nodeConfigurator.NodeConfigurator()
 
-        self.state = STATE_NO_FIRMWARE
-        self.dfu_connected = False
+        self._state = STATE_NO_FIRMWARE
+        self._dfu_connected = False
 
         self._device_detector_timer = QtCore.QTimer(self)
         self._device_detector_timer.timeout.connect(self._dfu_present)
@@ -56,6 +58,11 @@ class LpsToolsGui(QtWidgets.QMainWindow):
         self.programming_error.connect(self._show_error)
         self.programming_done.connect(self._programming_done)
         self.programming_progress.connect(self._programming_progress)
+
+        self._node_device = None
+        self._node_connected = False
+
+        self._update_state()
 
         self.show()
 
@@ -100,6 +107,8 @@ class LpsToolsGui(QtWidgets.QMainWindow):
             "Configure id {} mode {}".format(
                 self.configure_id_line.value(),
                 MODES[self.configure_mode_combo.currentIndex()]))
+        self._node_configurator.set_id(self._node_device,
+                                       self.configure_id_line.value())
 
     def _show_error(self, error):
         msgbox = QMessageBox(self)
@@ -125,25 +134,34 @@ class LpsToolsGui(QtWidgets.QMainWindow):
         self.infoLabel.setPixmap(pixmap.scaled(w, h, Qt.KeepAspectRatio))
 
     def _update_state(self):
-        if self._state == STATE_NO_FIRMWARE:
-            self._display_help('help_1.png')
+        if self._node_connected:
+            self._display_help('help_5.png')
             self.updateButton.setEnabled(False)
-        elif self._state == STATE_DFU and not self._dfu_connected:
+            self.configureButton.setEnabled(True)
+        elif not self._dfu_connected:
             self._display_help('help_2.png')
             self.updateButton.setEnabled(False)
+            self.configureButton.setEnabled(False)
+        elif self._state == STATE_NO_FIRMWARE:
+            self._display_help('help_1.png')
+            self.updateButton.setEnabled(False)
+            self.configureButton.setEnabled(False)
         elif self._state == STATE_DFU and self._dfu_connected:
             self._display_help('help_3.png')
             self.updateButton.setEnabled(True)
             self.dfu_progress.setValue(0)
             self.dfu_progress.setFormat("%p%")
+            self.configureButton.setEnabled(False)
         elif self._state == STATE_DFU_FLASHING:
             self._display_help('help_3.png')
             self.updateButton.setEnabled(False)
             self.dfu_progress.setFormat("%p%")
+            self.configureButton.setEnabled(False)
         elif self._state == STATE_DFU_DONE:
             self._display_help('help_4.png')
             self.updateButton.setEnabled(True)
             self.dfu_progress.setFormat("Success!")
+            self.configureButton.setEnabled(False)
 
     # Timer functions
 
@@ -156,6 +174,9 @@ class LpsToolsGui(QtWidgets.QMainWindow):
                 self.dfu_connected = False
                 if self.state != STATE_NO_FIRMWARE:
                     self.state = STATE_DFU
+
+        self._node_device = self._node_configurator.find_node()
+        self.node_connected = self._node_device is not None
 
     # Properties
 
@@ -176,6 +197,15 @@ class LpsToolsGui(QtWidgets.QMainWindow):
         self._update_state()
 
     dfu_connected = property(_get_dfu_connected, _set_dfu_connected)
+
+    def _get_node_connected(self):
+        return self._node_connected
+
+    def _set_node_connected(self, node_connected):
+        self._node_connected = node_connected
+        self._update_state()
+
+    node_connected = property(_get_node_connected, _set_node_connected)
 
 
 class _DfuThread(QtCore.QThread):
