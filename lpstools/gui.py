@@ -1,6 +1,8 @@
 import os
 import platform
 import sys
+import serial
+import time
 
 from PyQt5 import QtCore
 from PyQt5 import QtWidgets
@@ -30,12 +32,15 @@ class LpsToolsGui(QtWidgets.QMainWindow):
     programming_error = pyqtSignal('QString')
     programming_done = pyqtSignal()
     programming_progress = pyqtSignal('QString', float)
+    config_done = pyqtSignal()
+    config_progress = pyqtSignal(float)
 
     def __init__(self, uipath):
         super(LpsToolsGui, self).__init__()
         uic.loadUi(uipath + 'gui.ui', self)
 
         self.dfu_progress.setValue(0)
+        self.cfg_progress.setValue(0)
         self._style_for_platform()
 
         # Connect buttons
@@ -58,6 +63,9 @@ class LpsToolsGui(QtWidgets.QMainWindow):
         self.programming_error.connect(self._show_error)
         self.programming_done.connect(self._programming_done)
         self.programming_progress.connect(self._programming_progress)
+
+        self.config_done.connect(self._config_done)
+        self.config_progress.connect(self._config_progress)
 
         self._node_device = None
         self._node_connected = False
@@ -103,10 +111,11 @@ class LpsToolsGui(QtWidgets.QMainWindow):
         self.state = STATE_DFU_FLASHING
 
     def _configure_clicked(self):
-        self._node_configurator.set_id(self._node_device,
-                                       self.configure_id_line.value())
-        newmode = MODES[self.configure_mode_combo.currentIndex()]
-        self._node_configurator.set_mode(self._node_device, newmode)
+        # Flashing in a thread to keep the UI alive
+        self._cfg_thread = _ConfigureThread(self, self._node_device,
+                                            self.configure_id_line.value(),
+                                            self.configure_mode_combo.currentIndex())
+        self._cfg_thread.start()
 
     def _show_error(self, error):
         msgbox = QMessageBox(self)
@@ -122,6 +131,14 @@ class LpsToolsGui(QtWidgets.QMainWindow):
 
     def _programming_progress(self, str, progress):
         self.dfu_progress.setValue(progress * 100)
+
+    def _config_done(self):
+        self.cfg_progress.setValue(100)
+        self.cfg_progress.setFormat("Success!")                
+
+    def _config_progress(self, progress):
+        self.cfg_progress.setFormat("%p%")
+        self.cfg_progress.setValue(progress * 100)
 
     # UI State handling
 
@@ -175,6 +192,9 @@ class LpsToolsGui(QtWidgets.QMainWindow):
 
         self._node_device = self._node_configurator.find_node()
         self.node_connected = self._node_device is not None
+        if not self._node_connected:
+            self.cfg_progress.setValue(0)            
+            self.cfg_progress.setFormat("%p%")
 
     # Properties
 
@@ -226,6 +246,48 @@ class _DfuThread(QtCore.QThread):
             self._window.programming_error.emit("Error while programming: " +
                                                 str(e))
 
+class _ConfigureThread(QtCore.QThread):
+
+    def __init__(self, window, node_device, id, mode):
+        QtCore.QThread.__init__(self)
+        self._window = window
+        self._id = id
+        self._mode = mode
+        self._node_device = node_device
+        self._node_configurator = nodeConfigurator.NodeConfigurator() 
+
+    def run(self):
+        self._window.config_progress.emit(0)
+        
+        for timeout in range(20):
+            try:
+                self._node_configurator.set_id(self._node_device,
+                                               self._id)
+                newmode = MODES[self._mode]
+                self._node_configurator.set_mode(self._node_device, newmode)
+                self._window.config_done.emit()
+                return
+            except serial.serialutil.SerialException as e:
+                if e.errno == 16:
+                    self._window.config_progress.emit(timeout/21)
+                    time.sleep(1)
+                else:
+                    self._window.programming_error.emit("Error while configuring: " +
+                                                        str(e))
+                    
+                    self._window.config_progress.emit(0)
+                    return
+                    
+            except Exception as e:
+                self._window.programming_error.emit("Error while configuring: " +
+                                                    str(e))
+                
+                self._window.config_progress.emit(0)
+                return
+        
+        self._window.programming_error.emit("Error while configuring: " +
+                                            "Serial port busy")
+        self._window.config_progress.emit(0)
 
 def main():
     if getattr(sys, 'frozen', False):

@@ -170,7 +170,7 @@
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_6">
            <item>
-            <widget class="QProgressBar" name="progressBar">
+            <widget class="QProgressBar" name="cfg_progress">
              <property name="value">
               <number>24</number>
              </property>
