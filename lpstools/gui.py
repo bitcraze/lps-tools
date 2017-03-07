@@ -1,9 +1,9 @@
 import os
 import platform
 import sys
-import serial
 import time
 
+import serial
 from PyQt5 import QtCore
 from PyQt5 import QtWidgets
 from PyQt5 import uic
@@ -112,9 +112,10 @@ class LpsToolsGui(QtWidgets.QMainWindow):
 
     def _configure_clicked(self):
         # Flashing in a thread to keep the UI alive
+        mode_index = self.configure_mode_combo.currentIndex()
         self._cfg_thread = _ConfigureThread(self, self._node_device,
                                             self.configure_id_line.value(),
-                                            self.configure_mode_combo.currentIndex())
+                                            mode_index)
         self._cfg_thread.start()
 
     def _show_error(self, error):
@@ -134,7 +135,7 @@ class LpsToolsGui(QtWidgets.QMainWindow):
 
     def _config_done(self):
         self.cfg_progress.setValue(100)
-        self.cfg_progress.setFormat("Success!")                
+        self.cfg_progress.setFormat("Success!")
 
     def _config_progress(self, progress):
         self.cfg_progress.setFormat("%p%")
@@ -193,7 +194,7 @@ class LpsToolsGui(QtWidgets.QMainWindow):
         self._node_device = self._node_configurator.find_node()
         self.node_connected = self._node_device is not None
         if not self._node_connected:
-            self.cfg_progress.setValue(0)            
+            self.cfg_progress.setValue(0)
             self.cfg_progress.setFormat("%p%")
 
     # Properties
@@ -246,6 +247,7 @@ class _DfuThread(QtCore.QThread):
             self._window.programming_error.emit("Error while programming: " +
                                                 str(e))
 
+
 class _ConfigureThread(QtCore.QThread):
 
     def __init__(self, window, node_device, id, mode):
@@ -254,11 +256,11 @@ class _ConfigureThread(QtCore.QThread):
         self._id = id
         self._mode = mode
         self._node_device = node_device
-        self._node_configurator = nodeConfigurator.NodeConfigurator() 
+        self._node_configurator = nodeConfigurator.NodeConfigurator()
 
     def run(self):
         self._window.config_progress.emit(0)
-        
+
         for timeout in range(20):
             try:
                 self._node_configurator.set_id(self._node_device,
@@ -269,25 +271,28 @@ class _ConfigureThread(QtCore.QThread):
                 return
             except serial.serialutil.SerialException as e:
                 if e.errno == 16:
-                    self._window.config_progress.emit(timeout/21)
+                    self._window.config_progress.emit(timeout / 21)
                     time.sleep(1)
                 else:
-                    self._window.programming_error.emit("Error while configuring: " +
+                    self._window.programming_error.emit("Error while " +
+                                                        "configuring: " +
                                                         str(e))
-                    
+
                     self._window.config_progress.emit(0)
                     return
-                    
+
             except Exception as e:
-                self._window.programming_error.emit("Error while configuring: " +
+                self._window.programming_error.emit("Error while" +
+                                                    "configuring: " +
                                                     str(e))
-                
+
                 self._window.config_progress.emit(0)
                 return
-        
+
         self._window.programming_error.emit("Error while configuring: " +
                                             "Serial port busy")
         self._window.config_progress.emit(0)
+
 
 def main():
     if getattr(sys, 'frozen', False):
