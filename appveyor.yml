@@ -10,7 +10,7 @@ install:
 
     pip install jinja2
 
-    choco install -y nsis.portable -version 3.02
+    choco install -y nsis.portable -version 3.02.0.20160720
 cache: '%LOCALAPPDATA%\pip\Cache'
 build_script:
 - cmd: >-
