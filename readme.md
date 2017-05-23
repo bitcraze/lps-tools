@@ -39,6 +39,23 @@ python cx_setup.py build
 
 The final result is in the folder ```build\exe.win32-3.6```.
 
+## Building installer for Windows
+
+Once the Windows executable is built, you can build the Windows installer.
+Building the installer requires the [nsis installer](http://nsis.sourceforge.net/Main_Page).
+
+To build the installer:
+```
+cd win32install
+python generate_nsis.py
+```
+
+This will generate the file lpstools.nsi, it can be used to generate the
+installer using the nsis compiler:
+```
+makensis lpstools.nsi
+```
+
 ## The tooolbelt
 
 If you do not want to install python tools natively you can use the toolbelt

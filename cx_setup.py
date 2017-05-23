@@ -14,7 +14,7 @@ files_to_copy = [
 ]
 
 setup(executables=[Executable("lpstools/gui.py", targetName="lpstool.exe",
-                              base="Win32GUI")],
+                              base="Win32GUI", icon="bitcraze.ico")],
       **setup_options)
 
 print()
