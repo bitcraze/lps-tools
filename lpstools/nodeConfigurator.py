@@ -54,6 +54,10 @@ class NodeConfigurator:
 
     def set_mode(self, device, mode):
         ser = serial.Serial(device)
-        for token in self.modes[mode]:
-            ser.write(token.encode('utf-8'))
+        try:
+            for token in self.modes[mode]:
+                ser.write(token.encode('utf-8'))
+        except KeyError as e:
+            ser.close()
+            raise e
         ser.close()
