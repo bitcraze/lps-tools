@@ -81,7 +81,7 @@ class TestNodeConfigurator(unittest.TestCase):
 
         # Assert
         serial_mock.write.assert_called_once_with(b'3')
-        serial_mock.close.assert_called_once()
+        serial_mock.close.assert_called_once_with()
 
     @patch.object(serial, 'Serial', autospec=True)
     def test_that_data_is_written_when_mode_is_set(self, ctor_mock):
@@ -108,7 +108,7 @@ class TestNodeConfigurator(unittest.TestCase):
         self.assertRaises(KeyError, lambda: self.sut.set_mode(device, 666))
 
         # Assert
-        serial_mock.close.assert_called_once()
+        serial_mock.close.assert_called_once_with()
 
     def _mock_port_info(self, vid, pid, device):
         port_mock = MagicMock(spec=ListPortInfo, auto_spec=True)
