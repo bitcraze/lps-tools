@@ -24,19 +24,20 @@
 import serial
 from serial.tools.list_ports import comports
 
-MODE_ANCOR = 0
+MODE_TWR_ANCOR = 0
 MODE_TAG = 1
 MODE_SNIFFER = 2
-
+MODE_TDOA_ANCOR = 3
 
 class NodeConfigurator:
     VID = 0x0483
     PID = 0x5740
 
     modes = {
-        MODE_ANCOR:   'a',
-        MODE_TAG:     't',
-        MODE_SNIFFER: 's'
+        MODE_TWR_ANCOR:     ['m', '0'],
+        MODE_TAG:           ['t'],
+        MODE_SNIFFER:       ['s'],
+        MODE_TDOA_ANCOR:    ['m', '3']
     }
 
     def find_node(self):
@@ -53,5 +54,6 @@ class NodeConfigurator:
 
     def set_mode(self, device, mode):
         ser = serial.Serial(device)
-        ser.write(self.modes[mode].encode('utf-8'))
+        for token in self.modes[mode]:
+            ser.write(token.encode('utf-8'))
         ser.close()

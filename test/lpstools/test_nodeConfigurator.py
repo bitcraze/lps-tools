@@ -23,7 +23,7 @@
 #  MA  02110-1301, USA.
 import unittest
 from unittest.mock import MagicMock
-from unittest.mock import patch
+from unittest.mock import patch, call
 
 import serial
 from serial.tools.list_ports_common import ListPortInfo
@@ -91,11 +91,11 @@ class TestNodeConfigurator(unittest.TestCase):
         ctor_mock.side_effect = lambda x: {device: serial_mock}[x]
 
         # Test
-        self.sut.set_mode(device, nodeConfigurator.MODE_ANCOR)
+        self.sut.set_mode(device, nodeConfigurator.MODE_TWR_ANCOR)
 
         # Assert
-        serial_mock.write.assert_called_once_with(b'a')
-        serial_mock.close.assert_called_once()
+        serial_mock.write.assert_has_calls([call(b'm'), call(b'0')])
+        serial_mock.close.assert_called_once_with()
 
     @patch.object(serial, 'Serial', autospec=True)
     def test_that_exception_is_raised_when_mode_is_wrong(self, ctor_mock):

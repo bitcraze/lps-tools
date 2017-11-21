@@ -22,9 +22,10 @@ STATE_DFU_FLASHING = "dfu flashing"
 STATE_DFU_DONE = "dfu done"
 
 MODES = {
-    0: nodeConfigurator.MODE_ANCOR,
+    0: nodeConfigurator.MODE_TWR_ANCOR,
     1: nodeConfigurator.MODE_TAG,
     2: nodeConfigurator.MODE_SNIFFER,
+    3: nodeConfigurator.MODE_TDOA_ANCOR,
 }
 
 

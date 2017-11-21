@@ -163,6 +163,11 @@
                <string>Sniffer</string>
               </property>
              </item>
+             <item>
+              <property name="text">
+               <string>Anchor (TDoA)</string>
+              </property>
+             </item>
             </widget>
            </item>
           </layout>
