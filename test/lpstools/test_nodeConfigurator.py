@@ -22,9 +22,9 @@
 #  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #  MA  02110-1301, USA.
 import unittest
+from unittest.mock import call
 from unittest.mock import MagicMock
 from unittest.mock import patch
-from unittest.mock import call
 
 import serial
 from serial.tools.list_ports_common import ListPortInfo

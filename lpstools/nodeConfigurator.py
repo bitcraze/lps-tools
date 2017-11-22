@@ -29,6 +29,7 @@ MODE_TAG = 1
 MODE_SNIFFER = 2
 MODE_TDOA_ANCOR = 3
 
+
 class NodeConfigurator:
     VID = 0x0483
     PID = 0x5740
