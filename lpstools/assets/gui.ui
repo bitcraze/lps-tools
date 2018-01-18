@@ -127,7 +127,11 @@
             </widget>
            </item>
            <item>
-            <widget class="QSpinBox" name="configure_id_line"/>
+            <widget class="QSpinBox" name="configure_id_line">
+             <property name="maximum">
+              <number>255</number>
+             </property>
+            </widget>
            </item>
           </layout>
          </item>

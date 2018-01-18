@@ -49,9 +49,16 @@ class NodeConfigurator:
                 return port.device
 
     def set_id(self, device, id):
-        ser = serial.Serial(device)
-        ser.write(str(id).encode('utf-8'))
-        ser.close()
+        if id < 10:
+            ser = serial.Serial(device)
+            ser.write(str(id).encode('utf-8'))
+            ser.close()
+        else:
+            ser = serial.Serial(device)
+            ser.write("i".encode('utf-8'))
+            ser.write(str(id).encode('utf-8'))
+            ser.write("\n".encode('utf-8'))
+            ser.close()
 
     def set_mode(self, device, mode):
         ser = serial.Serial(device)
