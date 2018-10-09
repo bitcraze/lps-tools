@@ -169,7 +169,12 @@
              </item>
              <item>
               <property name="text">
-               <string>Anchor (TDoA)</string>
+               <string>Anchor (TDoA 2)</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Anchor (TDoA 3)</string>
               </property>
              </item>
             </widget>

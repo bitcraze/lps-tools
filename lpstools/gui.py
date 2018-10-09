@@ -25,7 +25,8 @@ MODES = {
     0: nodeConfigurator.MODE_TWR_ANCOR,
     1: nodeConfigurator.MODE_TAG,
     2: nodeConfigurator.MODE_SNIFFER,
-    3: nodeConfigurator.MODE_TDOA_ANCOR,
+    3: nodeConfigurator.MODE_TDOA2_ANCOR,
+    4: nodeConfigurator.MODE_TDOA3_ANCOR,
 }
 
 
@@ -283,7 +284,7 @@ class _ConfigureThread(QtCore.QThread):
                     return
 
             except Exception as e:
-                self._window.programming_error.emit("Error while" +
+                self._window.programming_error.emit("Error while " +
                                                     "configuring: " +
                                                     str(e))
 

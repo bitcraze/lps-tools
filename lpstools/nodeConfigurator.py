@@ -27,7 +27,8 @@ from serial.tools.list_ports import comports
 MODE_TWR_ANCOR = 0
 MODE_TAG = 1
 MODE_SNIFFER = 2
-MODE_TDOA_ANCOR = 3
+MODE_TDOA2_ANCOR = 3
+MODE_TDOA3_ANCOR = 4
 
 
 class NodeConfigurator:
@@ -38,7 +39,8 @@ class NodeConfigurator:
         MODE_TWR_ANCOR:     ['m', '0'],
         MODE_TAG:           ['t'],
         MODE_SNIFFER:       ['s'],
-        MODE_TDOA_ANCOR:    ['m', '3']
+        MODE_TDOA2_ANCOR:    ['m', '3'],
+        MODE_TDOA3_ANCOR:    ['m', '4']
     }
 
     def find_node(self):
