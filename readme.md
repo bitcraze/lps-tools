@@ -25,6 +25,19 @@ To run the GUI:
 python3 -m lpstools
 ```
 
+### USB access right on Linux
+
+On Linux, to be able to flash the node you need to have access right to the node bootloader. This can be achieved by adding a udev rules for the node bootloader.
+```
+# cat > /etc/udev/rules.d/99-lps.rules << EOF
+SUBSYSTEM=="usb", ATTRS{idVendor}=="0483", ATTRS{idProduct}=="df11", MODE="0664", GROUP="plugdev"
+EOF
+```
+Your user also needs to be in the dialout group in order to be able to communicate with the node serial port (you may need to log-out and log-in againt for this to take effect):
+```
+sudo adduser $USER dialout
+```
+
 ## Building for Windows
 
 It is possible to build a windows executable of the tool. This allows to
