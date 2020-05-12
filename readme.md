@@ -2,7 +2,7 @@
 
 Tools to configure the Loco Positioning System
 
-This tool is still very much work in progress
+For more info see our [documentation](https://www.bitcraze.io/documentation/repository/lps-node-firmware/master/).
 
 ## Running instruction
 
