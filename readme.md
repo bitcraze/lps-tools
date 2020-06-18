@@ -38,6 +38,17 @@ Your user also needs to be in the dialout group in order to be able to communica
 sudo adduser $USER dialout
 ```
 
+## DFU on mac-OS
+
+DFU is used to flash new firmware to a Node. On mac-OS you have to install dfu-util (http://dfu-util.sourceforge.net/)
+
+The easiest way is to use Homebrew
+
+```
+brew install dfu-util
+```
+
+
 ## Building for Windows
 
 It is possible to build a windows executable of the tool. This allows to
