@@ -2,7 +2,7 @@
 import subprocess
 
 try:
-    subprocess.check_call(['pre-commit', 'run', '--all-files'])
+    subprocess.check_call(['python3', '-m', 'flake8', 'lpstools'])
     print('verify pass')
 except subprocess.CalledProcessError as e:
     print('Error: verify fail')
