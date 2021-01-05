@@ -24,12 +24,12 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2.2.1
         with:
-          python-version: 3.6
+          python-version: 3.7
           architecture: x86
       - name: Install dependencies
         run: |
           pip install -e .[pyqt5]
-          pip install cx_freeze
+          pip install cx_freeze==6.5
           pip install jinja2
           choco install -y nsis.portable -version 3.02.0.20160720
       - name: Build
