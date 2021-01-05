@@ -1,4 +1,4 @@
-# Loco Positioning System Tools [![Build Status](https://api.travis-ci.org/bitcraze/lps-tools.svg?branch=master)](https://api.travis-ci.org/bitcraze/lps-tools.svg?branch=master) [![Build status](https://ci.appveyor.com/api/projects/status/dnko8ka5owq07cul?svg=true)](https://ci.appveyor.com/project/bitcraze/lps-tools)
+# Loco Positioning System Tools [![CI](https://github.com/bitcraze/lps-tools/workflows/CI/badge.svg)](https://github.com/bitcraze/lps-tools/actions?query=workflow%3ACI) [![Build status](https://ci.appveyor.com/api/projects/status/dnko8ka5owq07cul?svg=true)](https://ci.appveyor.com/project/bitcraze/lps-tools)
 
 Tools to configure the Loco Positioning System
 
