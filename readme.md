@@ -114,3 +114,11 @@ tox
 ```
 tb test
 ```
+
+## Contribute
+Go to the [contribute page](https://www.bitcraze.io/contribute/) on our website to learn more.
+
+### Test code for contribution
+Run the automated build locally to test your code
+
+	./tools/build/build
