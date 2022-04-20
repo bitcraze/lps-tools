@@ -133,7 +133,7 @@ class LpsToolsGui(QtWidgets.QMainWindow):
         self.state = STATE_DFU_DONE
 
     def _programming_progress(self, str, progress):
-        self.dfu_progress.setValue(progress * 100)
+        self.dfu_progress.setValue(int(progress * 100))
 
     def _config_done(self):
         self.cfg_progress.setValue(100)
@@ -141,7 +141,7 @@ class LpsToolsGui(QtWidgets.QMainWindow):
 
     def _config_progress(self, progress):
         self.cfg_progress.setFormat("%p%")
-        self.cfg_progress.setValue(progress * 100)
+        self.cfg_progress.setValue(int(progress * 100))
 
     # UI State handling
 
