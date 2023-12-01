@@ -6,6 +6,9 @@ on:
     branches: [ master ]
   pull_request:
     branches: [ master ]
+  schedule:
+    # Weekly build to make sure dependencies are OK
+    - cron:  '30 19 * * 5'
 
 jobs:
   checks:
@@ -14,12 +17,12 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Check and build
-      run: docker run --rm -v ${PWD}:/module bitcraze/builder ./tools/build/build 
-  
+      run: docker run --rm -v ${PWD}:/module bitcraze/builder ./tools/build/build
+
   windows:
     runs-on: windows-2019
     needs: checks
-    
+
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2.2.1
@@ -43,4 +46,3 @@ jobs:
         with:
           name: windows-build
           path: "win32install/*.exe"
-    
