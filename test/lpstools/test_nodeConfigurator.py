@@ -40,7 +40,7 @@ class TestNodeConfigurator(unittest.TestCase):
     def setUp(self):
         self.sut = NodeConfigurator()
 
-    @patch.object(nodeConfigurator, 'comports', auto_spec=True)
+    @patch.object(nodeConfigurator, 'comports', autospec=True)
     def test_that_find_node_returns_the_first_matching_port(self,
                                                             comports_mock):
         # Fixture
@@ -59,7 +59,7 @@ class TestNodeConfigurator(unittest.TestCase):
         # Assert
         self.assertEqual(expected, actual)
 
-    @patch.object(nodeConfigurator, 'comports', auto_spec=True)
+    @patch.object(nodeConfigurator, 'comports', autospec=True)
     def test_that_none_is_returned_if_no_node_is_found(self, comports_mock):
         # Fixture
         comports_mock.return_value = []
@@ -74,7 +74,7 @@ class TestNodeConfigurator(unittest.TestCase):
     def test_that_data_is_written_when_id_is_set(self, ctor_mock):
         # Fixture
         device = '/dev/the_device'
-        serial_mock = MagicMock(spec=serial.Serial, autospec=True)
+        serial_mock = MagicMock()
         ctor_mock.side_effect = lambda x: {device: serial_mock}[x]
 
         # Test
@@ -88,7 +88,7 @@ class TestNodeConfigurator(unittest.TestCase):
     def test_that_data_is_written_when_mode_is_set(self, ctor_mock):
         # Fixture
         device = '/dev/the_device'
-        serial_mock = MagicMock(spec=serial.Serial, autospec=True)
+        serial_mock = MagicMock()
         ctor_mock.side_effect = lambda x: {device: serial_mock}[x]
 
         # Test
@@ -102,7 +102,7 @@ class TestNodeConfigurator(unittest.TestCase):
     def test_that_exception_is_raised_when_mode_is_wrong(self, ctor_mock):
         # Fixture
         device = '/dev/the_device'
-        serial_mock = MagicMock(spec=serial.Serial, autospec=True)
+        serial_mock = MagicMock()
         ctor_mock.side_effect = lambda x: {device: serial_mock}[x]
 
         # Test & assert
@@ -112,7 +112,7 @@ class TestNodeConfigurator(unittest.TestCase):
         serial_mock.close.assert_called_once_with()
 
     def _mock_port_info(self, vid, pid, device):
-        port_mock = MagicMock(spec=ListPortInfo, auto_spec=True)
+        port_mock = MagicMock(spec=ListPortInfo, autospec=True)
 
         port_mock.vid = vid
         port_mock.pid = pid
