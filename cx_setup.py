@@ -7,15 +7,14 @@ from os import path
 from cx_Freeze import Executable
 from cx_Freeze import setup
 
-from setup_common import setup_options
-
 files_to_copy = [
     ('lpstools\\assets\\*', 'assets\\')
 ]
 
+# Package metadata (name, version, packages, ...) is read by setuptools from
+# pyproject.toml
 setup(executables=[Executable("lpstools/gui.py", target_name="lpstool.exe",
-                              base="Win32GUI", icon="bitcraze.ico")],
-      **setup_options)
+                              base="Win32GUI", icon="bitcraze.ico")])
 
 print()
 print("Custom copy:")

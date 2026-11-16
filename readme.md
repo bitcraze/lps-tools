@@ -6,9 +6,21 @@ For more info see our [documentation](https://www.bitcraze.io/documentation/repo
 
 ## Running instruction
 
-This is a python package that requires python 3.4+ and pip. If you are running
-in Linux use ```pip3``` instead of ```pip```. For windows and mac-OS any
-distribution of Python 3.4 or later should work.
+### Recommended: using uv
+
+The recommended way to run the LPS tools is with [uv](https://docs.astral.sh/uv/),
+which takes care of Python and all dependencies. Install uv by following the
+[uv installation guide](https://docs.astral.sh/uv/getting-started/installation/).
+
+To run the GUI from a clone of this repository:
+```
+uv run --extra pyqt5 lps-tools
+```
+
+### Alternative: using pip
+
+This is a python package that requires python 3.8+ and pip. If you are running
+in Linux use ```pip3``` instead of ```pip```.
 
 To install for development (will use the files in the repos folder):
 ```
@@ -21,6 +33,10 @@ pip3 install -e .
 ```
 
 To run the GUI:
+```
+lps-tools
+```
+or
 ```
 python3 -m lpstools
 ```
@@ -104,6 +120,11 @@ tb verify
 ```
 
 ## Unit testing
+
+* with uv
+```
+uv run python -m unittest discover
+```
 
 * with native tools
 ```
